@@ -1,0 +1,41 @@
+---
+- name: web content
+  hosts: dev
+  become: true
+
+
+  tasks: 
+
+    - name: Create a directory devweb
+      ansible.builtin.file:
+        path: /devweb
+        state: directory
+        setype: httpd_sys_content_t
+        mode: '2775'
+
+    - name: Define persistent SELinux context
+      community.general.sefcontext:
+        target: '/devweb(/.*)?'
+        setype: httpd_sys_content_t
+        state: present
+
+    - name: Apply SELinux context
+      ansible.builtin.command:
+        cmd: restorecon -Rv /devweb
+      changed_when: false
+
+    - name: Create a file
+      ansible.builtin.copy:
+        dest: /devweb/index.html
+        content: "Developement"
+        mode: '0664'
+
+    - name: Create a symbolic link
+      ansible.builtin.file:
+        src: /devweb
+        dest: /var/www/html/devweb
+        state: link
+    
+
+
+
