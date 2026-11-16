@@ -1,0 +1,45 @@
+---
+- name: install vsftp mariadb-server on dev and test
+  hosts: dev, test
+  become: true
+
+
+  vars:
+    packages:
+      - vsftpd
+      - mariadb-server
+
+
+  tasks: 
+
+    - name: Install the latest version of Apache
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+
+
+- name: install developement tools on prod
+  hosts: prod
+  become: true
+  tasks:
+
+    - name: Install the Development tools package group
+      ansible.builtin.dnf:
+        name: '@Development tools'
+        state: present
+
+- name: update all packages on dev group
+  hosts: dev
+  become: true
+
+  tasks:
+
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+
+
+
