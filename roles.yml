@@ -1,0 +1,16 @@
+---
+- name: apply apache roles to webservers
+  hosts: webservers
+  become: true
+
+  roles: 
+    - apache
+
+
+- name: apply apache roles to balancers
+  hosts: balancers
+  become: true
+    
+  roles:
+    - apache
+  
