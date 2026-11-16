@@ -1,0 +1,9 @@
+---
+- name: configure timesync to all server
+  hosts: all
+  vars:
+    timesync_ntp_servers:
+      - hostname: control-node
+        iburst: true
+  roles:
+    - rhel-system-roles.timesync
