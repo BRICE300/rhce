@@ -1,0 +1,32 @@
+---
+- name: hardware Report
+  hosts: all
+  become: true
+  
+
+  tasks:
+
+      - name: Copy file with owner and permissions
+        ansible.builtin.copy:
+          src: /home/devops/rhce/hwrereport.txt
+          dest: /root/hwrereport.txt
+
+
+      - name: Replace old hardware name to newname
+        ansible.builtin.replace:
+          path: /root/hwrereport.txt
+          regexp: "{{ item.oldvalue }}"
+          replace: "{{ item.newvalue }}"
+        loop: 
+          - oldvalue: hostname
+            newvalue: "{{ ansible_hostname | default ('NONE') }}"
+          - oldvalue: biosversion
+            newvalue: "{{ ansible_bios_version | default ('NONE') }}"
+          - oldvalue: memory
+            newvalue: "{{ ansible_memtotal_mb | default ('NONE') }}"
+          - oldvalue: vdasize
+            newvalue: "{{ ansible_devices.vda.size | default ('NONE') }}"
+          - oldvalue: vdbsize
+            newvalue: "{{ ansible_devices.vdb.size | default ('NONE') }}"
+
+
