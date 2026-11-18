@@ -1,0 +1,56 @@
+---
+- name: create user with vault passwr
+  hosts: dev,test
+  become: true
+  vars_files:
+    - encryppted_vars.yml
+    - user_list.yml
+
+
+  tasks:
+
+
+    - name: creation of group appdev
+      ansible.builtin.group:
+        name: appdev
+        state: present
+
+
+    - name: Add the users to the group appdev
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        group: appdev
+        password: "{{ dev_pw | password_hash('sha512') }}"
+      when: item.job=='developer' 
+      loop: "{{ user }}"
+
+
+
+
+- name: create user with vault passwr
+  hosts: test
+  become: true
+  vars_files:
+    - encryppted_vars.yml
+    - user_list.yml
+
+
+  tasks:
+
+
+    - name: creation of group appmgr
+      ansible.builtin.group:
+        name: appmgr
+        state: present
+
+
+    - name: Add the users to the group appdev
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        group: appdev
+        password: "{{ mgr_pw | password_hash('sha512') }}"
+      when: item.job=='manager'
+      loop: "{{ user }}"
+
+
+ 
