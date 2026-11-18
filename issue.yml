@@ -1,0 +1,41 @@
+---
+- name: create the issue file
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Create file
+      ansible.builtin.file:
+        path: /etc/issue
+        state: touch
+
+
+- name: Create a file
+  hosts: dev
+  become: true
+
+  tasks:
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'DEVELOPEMENT'
+        dest: /etc/issue
+
+- name: Create a file
+  hosts: test
+  become: true
+    
+  tasks:
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'test'
+        dest: /etc/issue
+
+- name: Create a file
+  hosts: prod
+  become: true
+    
+  tasks:
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: 'Production'
+        dest: /etc/issue
