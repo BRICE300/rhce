@@ -1,0 +1,42 @@
+---
+- name: install and update
+  hosts: dev
+  become: true
+
+
+  tasks: 
+
+    - name: Install Apache
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Touch again the same file, but do not change times this makes the task idempotent
+      ansible.builtin.file:
+        path: /var/www/html/index.html
+        state: touch
+
+    - name: Copy using inline content
+      ansible.builtin.copy:
+        content: "Welcome to {{ inventory_hostname}}!\n"
+        dest: /var/www/html/index.html
+
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+      
+
+    - name: Permanently enable https service, also enable it immediately if possible
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true
+        immediate: true
+        offline: true
+
+
+
+
+

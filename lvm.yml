@@ -8,10 +8,10 @@
     - name: chrck if device is not present
       ansible.builtin.debug:
         msg: device not present
-      when: ansible.lvm.vgs.research is not defined
+      when: ansible_lvm.vgs.research is not defined
 
     - name: Create a volume group
-      community.general.lvg:
+      community.gene:wqral.lvg:
         vg: research
         pvs: /dev/sda1
 
@@ -25,7 +25,7 @@
     - name: chrck if device is not present
       ansible.builtin.debug:
         msg: requier size is not resent
-      when: ansible.lvm.vgs.research.free_g=>"7000"
+      when: ansible_lvm.vgs.research.free_g>="7000"
     
 
     - name: if not
@@ -33,7 +33,7 @@
         vg: research
         lv: data
         size: 2000
-      when: ansible.lvm.vgs.research.free_g=>"7000"
+      when: ansible_lvm.vgs.research.free_g>="7000"
 
 
     - name: Create a ext2 filesystem on /dev/sdb1
