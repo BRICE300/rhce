@@ -1,0 +1,46 @@
+---
+- name: create a vomum group
+  hosts: dev
+  become: true
+
+  tasks: 
+
+    - name: Create a volume group 
+      community.general.lvg:
+        vg: research_vg
+        pvs: /dev/sdb
+        state: present
+
+
+    - name: Create a logical volume of 512m
+      community.general.lvol:
+        vg: research_vg
+        lv: data_lv
+        size: 2G
+
+    - name: Create a xfs  filesystem 
+      community.general.filesystem:
+        fstype: xfs
+        dev: /dev/research_vg/data_lv
+
+    - name: Create a directory to mmount the disk
+      ansible.builtin.file:
+        path: /research/data
+        state: directory
+        mode: '0755'
+
+    - name: Mount up device by UUID
+      ansible.posix.mount:
+        path: /research/data/
+        src: /dev/research_vg/data_lv 
+        fstype: xfs
+        opts: noatime
+        state: mounted
+
+
+
+
+
+
+
+
