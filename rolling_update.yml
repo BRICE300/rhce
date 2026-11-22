@@ -35,6 +35,13 @@
         permanent: true
         immediate: true
         offline: true
+    - name: verifier l'etat du serveur
+      ansible.builtin.uri:
+        url: "http://{{ inventory_hostname }}"
+        status_code: 200
+      delegate_to: localhost
+      become: no
+
 
 
 
