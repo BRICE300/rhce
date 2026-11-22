@@ -1,0 +1,43 @@
+---
+- name: create a logicak volumr
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: chrck if device is not present
+      ansible.builtin.debug:
+        msg: device not present
+      when: ansible.lvm.vgs.research is not defined
+
+    - name: Create a volume group
+      community.general.lvg:
+        vg: research
+        pvs: /dev/sda1
+
+    - name: when vg is presend 
+      community.general.lvol:
+        vg: research
+        lv: data
+        size: 6000
+
+
+    - name: chrck if device is not present
+      ansible.builtin.debug:
+        msg: requier size is not resent
+      when: ansible.lvm.vgs.research.free_g=>"7000"
+    
+
+    - name: if not
+      community.general.lvol:
+        vg: research
+        lv: data
+        size: 2000
+      when: ansible.lvm.vgs.research.free_g=>"7000"
+
+
+    - name: Create a ext2 filesystem on /dev/sdb1
+      community.general.filesystem:
+        fstype: ext4
+        dev: /research/data
+

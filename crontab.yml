@@ -1,0 +1,24 @@
+---
+- name: crontab for a specifique user
+  hosts: all
+  become: true
+
+
+  tasks:
+
+    - name: create user vagrant
+      ansible.builtin.user:
+        name: vagrant
+        state: present
+
+
+
+    - name: Creates a cron file under /etc/cron.d
+      ansible.builtin.cron:
+        name: system_health_check
+        weekday: "*"
+        minute: "*/2"
+        hour: "*"
+        user: vagrant
+        job: logger "Anssible health check"
+
